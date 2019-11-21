@@ -1,6 +1,6 @@
 const yup = require("yup");
 
-const userSchema = yup.object().shape({
+const registerSchema = yup.object().shape({
   username: yup
     .string()
     .min(3)
@@ -22,4 +22,16 @@ const userSchema = yup.object().shape({
     .max(255)
 });
 
-module.exports = { userSchema };
+const loginSchema = yup.object().shape({
+  username: yup
+    .string()
+    .min(3)
+    .trim()
+    .max(255),
+  password: yup
+    .string()
+    .min(3)
+    .max(255)
+});
+
+module.exports = { registerSchema, loginSchema };
