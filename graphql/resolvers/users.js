@@ -20,7 +20,6 @@ const userResolver = {
       });
 
       const res = await newUser.save();
-      console.log(res);
 
       const token = jwt.sign(
         {
