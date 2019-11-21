@@ -2,13 +2,28 @@ const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const { userSchema } = require("../../validation");
+
 const userResolver = {
   Mutation: {
-    register: async (
-      _,
-      { registerInput: { username, email, password, confirmPassword } }
-    ) => {
-      // TODO: Validate user input
+    register: async (_, { registerInput }) => {
+      try {
+        await userSchema.validate(registerInput);
+      } catch (err) {
+        throw new Error(err.errors[0]);
+      }
+
+      const { username, password, confirmPassword, email } = registerInput;
+
+      const usernameExists = await User.findOne({ username }).exec();
+      if (usernameExists) throw new Error("Username exists!");
+
+      const emailExists = await User.findOne({ email }).exec();
+      if (emailExists)
+        throw new Error("An account with that email address already exists!");
+
+      if (password !== confirmPassword)
+        throw new Error("Passwords do not match!");
 
       const hashedPassword = await bcrypt.hash(password, 12);
 
