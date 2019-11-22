@@ -3,11 +3,20 @@ import "./App.css";
 
 import Home from "./pages/Home";
 
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql"
+});
+
 function App() {
   return (
-    <div>
-      <Home />
-    </div>
+    <ApolloProvider client={client}>
+      <div>
+        <Home />
+      </div>
+    </ApolloProvider>
   );
 }
 
