@@ -1,6 +1,9 @@
 const Post = require("../../models/Post");
 const authentication = require("../../utils/authentication");
-const { UserInputError } = require("apollo-server-express");
+const {
+  UserInputError,
+  AuthenticationError
+} = require("apollo-server-express");
 
 const commentsResolvers = {
   Mutation: {
@@ -10,8 +13,6 @@ const commentsResolvers = {
       if (body.trim() === "") {
         throw new UserInputError("Comment body cannot be empty!");
       }
-
-      console.log(postId);
 
       const post = await Post.findById(postId);
 
@@ -27,6 +28,26 @@ const commentsResolvers = {
       } else {
         throw new UserInputError("Post not found!");
       }
+    },
+    deleteComment: async (_, { postId, commentId }, context) => {
+      const user = await authentication(context.req);
+
+      const post = await Post.findById(postId);
+      if (!post) throw new Error("Post does not exist!");
+
+      const commentIndex = post.comments.findIndex(
+        comment => comment.id === commentId
+      );
+
+      if (commentIndex === -1) throw new Error("Comment does not exist!");
+
+      if (user.username !== post.comments[commentIndex].username)
+        throw new AuthenticationError("Unauthorized action!");
+
+      post.comments.splice(commentIndex, 1);
+
+      await post.save();
+      return post;
     }
   }
 };

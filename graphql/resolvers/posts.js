@@ -35,7 +35,7 @@ const postResolvers = {
 
       const post = await Post.findById(postId);
       if (user.username !== post.username)
-        throw new AuthenticationError("Unauthorized!");
+        throw new AuthenticationError("Unauthorized action!");
 
       await post.delete();
       return "Post deleted successfully!";
