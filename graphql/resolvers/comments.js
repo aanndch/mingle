@@ -30,7 +30,7 @@ const commentsResolvers = {
       }
     },
     deleteComment: async (_, { postId, commentId }, context) => {
-      const user = await authentication(context.req);
+      const user = authentication(context.req);
 
       const post = await Post.findById(postId);
       if (!post) throw new Error("Post does not exist!");
@@ -45,6 +45,26 @@ const commentsResolvers = {
         throw new AuthenticationError("Unauthorized action!");
 
       post.comments.splice(commentIndex, 1);
+
+      await post.save();
+      return post;
+    },
+    likePost: async (_, { postId }, context) => {
+      const user = authentication(context.req);
+
+      const post = await Post.findById(postId);
+      if (!post) throw new UserInputError("Post does not exist!");
+
+      if (post.likes.find(like => like.username === user.username)) {
+        // Already liked post, unlike it
+        post.likes = post.likes.filter(like => like.username !== user.username);
+      } else {
+        // Hasn't liked post, like it
+        post.likes.push({
+          username: user.username,
+          createdAt: new Date().toISOString()
+        });
+      }
 
       await post.save();
       return post;

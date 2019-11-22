@@ -17,8 +17,8 @@ const typeDefs = gql`
   }
   type Like {
     id: ID!
-    createdAt: String!
     username: String!
+    createdAt: String!
   }
   type User {
     id: ID!
