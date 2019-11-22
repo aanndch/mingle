@@ -10,7 +10,7 @@ const postResolvers = {
       return posts;
     },
     getPost: async (_, { postId }) => {
-      const post = await Post.findById({ postId });
+      const post = await Post.findById(postId);
       if (!post) throw new Error("Post not found!");
 
       return post;
