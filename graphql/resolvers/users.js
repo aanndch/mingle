@@ -27,10 +27,10 @@ const userResolver = {
 
       const { username, password, confirmPassword, email } = registerInput;
 
-      const usernameExists = await User.findOne({ username }).exec();
+      const usernameExists = await User.findOne({ username });
       if (usernameExists) throw new Error("Username exists!");
 
-      const emailExists = await User.findOne({ email }).exec();
+      const emailExists = await User.findOne({ email });
       if (emailExists)
         throw new Error("An account with that email address already exists!");
 

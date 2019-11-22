@@ -1,3 +1,5 @@
+const { AuthenticationError } = require("apollo-server-express");
+
 const Post = require("../../models/Post");
 const authentication = require("../../utils/authentication");
 
@@ -27,6 +29,16 @@ const postResolvers = {
 
       const post = await newPost.save();
       return post;
+    },
+    deletePost: async (_, { postId }, context) => {
+      const user = await authentication(context.req);
+
+      const post = await Post.findById(postId);
+      if (user.username !== post.username)
+        throw new AuthenticationError("Unauthorized!");
+
+      await post.delete();
+      return "Post deleted successfully!";
     }
   }
 };
