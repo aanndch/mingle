@@ -1,2 +1,2 @@
 # mingle
- A social media app created using MERN stack and GraphQL.
+ A social media app where users can login and create, like and comment on posts.
