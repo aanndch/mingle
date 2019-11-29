@@ -51,7 +51,7 @@ const SinglePost = props => {
 
     postMarkup = (
       <Grid>
-        <Grid.Row>
+        <Grid.Row centered>
           <Grid.Column width={2}>
             <Image
               src="https://react.semantic-ui.com/images/avatar/large/molly.png"
