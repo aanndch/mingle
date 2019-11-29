@@ -28,7 +28,7 @@ const PostCard = ({
       </Card.Content>
       <Card.Content extra>
         <LikeButton user={user} id={id} likes={likes} />
-        <Button as="div" labelPosition="right" as={Link} to={`/posts/${id}`}>
+        <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
           <Button color="teal" basic>
             <Icon name="comments" />
           </Button>
