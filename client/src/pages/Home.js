@@ -18,7 +18,7 @@ const Home = () => {
       </Grid.Row>
       <Grid.Row>
         {user && (
-          <Grid.Column>
+          <Grid.Column width={16} style={{ marginBottom: "1rem" }}>
             <PostForm />
           </Grid.Column>
         )}
