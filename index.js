@@ -1,31 +1,33 @@
-const { ApolloServer, gql } = require("apollo-server-express");
-const express = require("express");
-const mongoose = require("mongoose");
-
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
 
 require("dotenv").config();
 
-const startServer = async () => {
-  const app = express();
+const { ApolloServer, PubSub } = require("apollo-server");
+const mongoose = require("mongoose");
 
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: ({ req }) => ({ req })
-  });
+const pubsub = new PubSub();
 
-  server.applyMiddleware({ app });
+const PORT = process.env.port || 5000;
 
-  await mongoose.connect(process.env.MONGODB_URI, {
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => ({ req, pubsub })
+});
+
+mongoose
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("MongoDB Connected");
+    return server.listen({ port: PORT });
+  })
+  .then(res => {
+    console.log(`Server running at ${res.url}`);
+  })
+  .catch(err => {
+    console.error(err);
   });
-
-  app.listen({ port: 4000 }, () =>
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
-};
-
-startServer();
