@@ -22,9 +22,6 @@ const PostForm = () => {
         variables: { body }
       });
       setBody("");
-    },
-    onError(err) {
-      console.log(err);
     }
   });
 
@@ -39,20 +36,28 @@ const PostForm = () => {
   };
 
   return (
-    <Form onSubmit={onSubmit}>
-      <h2>Create a post:</h2>
-      <Form.Field>
-        <Form.Input
-          placeword="Hi World.."
-          name="body"
-          onChange={onChange}
-          value={body}
-        />
-        <Button type="submit" color="teal">
-          Submit
-        </Button>
-      </Form.Field>
-    </Form>
+    <>
+      <Form onSubmit={onSubmit}>
+        <h2>Create a post:</h2>
+        <Form.Field>
+          <Form.Input
+            placeword="Hi World.."
+            name="body"
+            onChange={onChange}
+            value={body}
+            error={error ? true : false}
+          />
+          <Button type="submit" color="teal">
+            Submit
+          </Button>
+        </Form.Field>
+      </Form>
+      {error && (
+        <div className="ui error message" style={{ marginBottom: 20 }}>
+          {error.graphQLErrors[0].message}
+        </div>
+      )}
+    </>
   );
 };
 
