@@ -68,7 +68,7 @@ const userResolver = {
       const user = await User.findOne({ username });
       if (!user) throw new Error("User does not exist!");
 
-      const match = bcrypt.compare(password, user.password);
+      const match = await bcrypt.compare(password, user.password);
 
       if (!match) throw new Error("Password is incorrect!");
 
