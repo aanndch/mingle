@@ -86,8 +86,28 @@ const SinglePost = props => {
             </Card>
             {user && (
               <Card fluid>
-                <p>Post a comment</p>
-                <Form></Form>
+                <Card.Content>
+                  <p>Post a comment</p>
+                  <Form>
+                    <div className="ui action input fluid">
+                      <input
+                        type="text"
+                        placeholder="Comment..."
+                        name="comment"
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={comment.trim() === ""}
+                        onClick={submitCommment}
+                        color="teal"
+                      >
+                        Comment
+                      </Button>
+                    </div>
+                  </Form>
+                </Card.Content>
               </Card>
             )}
             {comments.map(comment => (
@@ -113,7 +133,7 @@ const SinglePost = props => {
 
 const SUBMIT_COMMENT = gql`
   mutation createComment($postId: ID!, $body: String!) {
-    createComment(postId: $postId, commentId: $commentId) {
+    createComment(postId: $postId, body: $body) {
       id
       comments {
         id
