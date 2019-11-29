@@ -26,9 +26,7 @@ const PostCard = ({
         <Card.Meta as={Link} to={`/posts/${id}`}>
           {moment(createdAt).fromNow(true)}
         </Card.Meta>
-        <Card.Description>
-          Molly wants to add you to the group <strong>musicians</strong>
-        </Card.Description>
+        <Card.Description>{body}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <Button as="div" labelPosition="right" onClick={likePost}>
