@@ -20,6 +20,8 @@ const postResolvers = {
     createPost: async (_, { body }, context) => {
       const user = authentication(context.req);
 
+      if (!body) throw new Error("Body cannot be empty!");
+
       const newPost = new Post({
         body,
         username: user.username,
