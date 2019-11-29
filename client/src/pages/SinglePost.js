@@ -18,6 +18,10 @@ const SinglePost = props => {
     }
   });
 
+  const redirect = () => {
+    props.history.push("/");
+  };
+
   let postMarkup;
   if (!data) {
     postMarkup = <p>Loading post...</p>;
@@ -59,7 +63,7 @@ const SinglePost = props => {
                   </Label>
                 </Button>
                 {user && user.username === username && (
-                  <DeleteButton postId={id} />
+                  <DeleteButton postId={id} callback={redirect} />
                 )}
               </Card.Content>
             </Card>
