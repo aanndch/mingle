@@ -41,7 +41,7 @@ const PostCard = ({
         </Button>
         <Button as="div" labelPosition="right" onClick={commentOnPost}>
           <Button color="teal" basic>
-            <Icon name="heart" />
+            <Icon name="comments" />
           </Button>
           <Label as="a" basic color="teal" pointing="left">
             {likes.length}
