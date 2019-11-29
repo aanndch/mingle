@@ -1,7 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
-import { Grid, Image, Card, Icon, Button, Label } from "semantic-ui-react";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import {
+  Grid,
+  Image,
+  Card,
+  Icon,
+  Button,
+  Label,
+  Form
+} from "semantic-ui-react";
 import moment from "moment";
 import LikeButton from "../components/LikeButton";
 import DeleteButton from "../components/DeleteButton";
@@ -12,10 +20,19 @@ const SinglePost = props => {
   const { user } = useContext(AuthContext);
   const postId = props.match.params.postId;
 
+  const [comment, setComment] = useState("");
+
   const { data } = useQuery(FETCH_POST, {
     variables: {
       postId
     }
+  });
+
+  const [submitCommment] = useMutation(SUBMIT_COMMENT, {
+    update() {
+      setComment("");
+    },
+    variables: { postId, body: comment }
   });
 
   const redirect = () => {
@@ -67,6 +84,24 @@ const SinglePost = props => {
                 )}
               </Card.Content>
             </Card>
+            {user && (
+              <Card fluid>
+                <p>Post a comment</p>
+                <Form></Form>
+              </Card>
+            )}
+            {comments.map(comment => (
+              <Card fluid key={comment.id}>
+                <Card.Content>
+                  {user && user.username === comment.username && (
+                    <DeleteButton postId={id} commentId={comment.id} />
+                  )}
+                  <Card.Header>{comment.username}</Card.Header>
+                  <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
+                  <Card.Description>{comment.body}</Card.Description>
+                </Card.Content>
+              </Card>
+            ))}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -75,6 +110,20 @@ const SinglePost = props => {
 
   return <div>{postMarkup}</div>;
 };
+
+const SUBMIT_COMMENT = gql`
+  mutation createComment($postId: ID!, $body: String!) {
+    createComment(postId: $postId, commentId: $commentId) {
+      id
+      comments {
+        id
+        body
+        createdAt
+        username
+      }
+    }
+  }
+`;
 
 const FETCH_POST = gql`
   query($postId: ID!) {
